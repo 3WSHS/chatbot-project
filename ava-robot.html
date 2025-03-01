@@ -218,22 +218,38 @@
     </div>
 
     <script>
-        // ✅ Listen for messages from chatbot-widget.html
-        window.addEventListener("message", function(event) {
-            if (event.data.type === "hover") {
-                if (event.data.state) {
-                    document.querySelector(".background-circle").classList.add("hovered");
-                } else {
-                    document.querySelector(".background-circle").classList.remove("hovered");
+        document.addEventListener("DOMContentLoaded", function() {  // ✅ Ensures DOM is fully loaded before running
+            const ava = document.querySelector(".background-circle");
+    
+            // ✅ Ensure Hover & Click Work Standalone (Not Just Via Widget)
+            ava.addEventListener("mouseenter", function() {
+                ava.classList.add("hovered");
+            });
+    
+            ava.addEventListener("mouseleave", function() {
+                ava.classList.remove("hovered");
+            });
+    
+            ava.addEventListener("click", function() {
+                ava.classList.add("clicked");
+    
+                // Restore normal state after 0.8s
+                setTimeout(() => ava.classList.remove("clicked"), 800);
+            });
+    
+            // ✅ Listen for messages from chatbot-widget.html
+            window.addEventListener("message", function(event) {
+                if (event.data.type === "hover") {
+                    ava.classList.toggle("hovered", event.data.state);
                 }
-            }
-
-            if (event.data.type === "clicked") {
-                document.querySelector(".background-circle").classList.add("clicked");
-
-                // Restore normal eyes after 0.8s
-                setTimeout(() => document.querySelector(".background-circle").classList.remove("clicked"), 800);
-            }
+    
+                if (event.data.type === "clicked") {
+                    ava.classList.add("clicked");
+    
+                    // Restore normal state after 0.8s
+                    setTimeout(() => ava.classList.remove("clicked"), 800);
+                }
+            });
         });
     </script>
 
