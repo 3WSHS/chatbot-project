@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ava the Robot</title>
+    <style>
+        /* Center Ava */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Matches iframe transparency */
+        }
+
+        /* Outer Circle Background */
+        .background-circle {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            background-color: #f4a120;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: float 3s infinite ease-in-out, glow 1s infinite alternate;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        /* 🔥 Hover Effect - Excited Expression */
+        .background-circle.hovered {
+            background-color: #ffcc00; /* Brighter Yellow */
+        }
+
+        /* 🔥 Click Effect - Darker Happy Expression */
+        .background-circle.clicked {
+            background-color: #ff8800;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Glowing Effect */
+        @keyframes glow {
+            0% { box-shadow: 0px 0px 10px rgba(255, 165, 0, 0.3); }
+            100% { box-shadow: 0px 0px 30px rgba(255, 165, 0, 0.8); }
+        }
+
+        /* Robot Head */
+        .ava {
+            position: relative;
+            width: 140px;
+            height: 130px;
+            background-color: #f4a120;
+            border: 12px solid white;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        /* Hover Effect - Inner Head Color Changes */
+        .background-circle.hovered .ava {
+            background-color: #ffcc00; /* Brighter Yellow */
+        }
+
+        /* Click Effect - Inner Head Color Darkens */
+        .background-circle.clicked .ava {
+            background-color: #ff8800;
+        }
+
+        /* Ears */
+        .ear {
+            position: absolute;
+            width: 18px;
+            height: 30px;
+            background-color: white;
+            border-radius: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .ear.left { left: -24px; }
+        .ear.right { right: -24px; }
+
+        /* Antenna */
+        .antenna {
+            position: absolute;
+            top: -26px;
+            left: 50%;
+            width: 8px;
+            height: 24px;
+            background-color: white;
+            transform: translateX(-50%);
+            animation: wiggle 1.5s infinite ease-in-out;
+        }
+        .antenna::after {
+            content: "";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            width: 18px;
+            height: 18px;
+            background-color: white;
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Eyes */
+        .eyes {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            width: 95px;
+            height: 28px;
+            display: flex;
+            justify-content: space-between;
+            transform: translateX(-50%);
+        }
+        .eye {
+            width: 34px;
+            height: 18px;
+            border-radius: 12px;
+            background-color: transparent;
+            border-top: 7px solid white;
+            transition: opacity 0s ease-in-out;
+        }
+
+        /* 🔥 Click Effect - Right Eye Blinks (One Eye Disappears) */
+        .background-circle.clicked .eye:last-child {
+            opacity: 0;
+        }
+
+        /* Mouth */
+        .mouth {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            width: 90px;
+            height: 40px;
+            background-color: white;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: height 0.3s ease-in-out;
+        }
+
+        /* Squiggly Talking Animation */
+        .squiggle {
+            width: 120%;
+            height: 100%;
+            position: absolute;
+        }
+
+        .squiggle path {
+            stroke-dasharray: 150;
+            stroke-dashoffset: 0;
+            animation: squiggle-move 1.2s infinite linear;
+            stroke-width: 6;
+            stroke-linecap: round;
+        }
+
+        /* Animation for Smooth Squiggly Movement */
+        @keyframes squiggle-move {
+            from { stroke-dashoffset: 150; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* 🔥 Click Effect - Bigger Smile */
+        .background-circle.clicked .mouth {
+            height: 50px;
+        }
+
+        .background-circle.clicked .squiggle path {
+            stroke-width: 8px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Background Circle -->
+        <div class="background-circle" id="ava">
+            <div class="ava">
+                <!-- Ears -->
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+
+                <!-- Antenna -->
+                <div class="antenna"></div>
+
+                <!-- Eyes -->
+                <div class="eyes">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                </div>
+
+                <!-- Mouth -->
+                <div class="mouth">
+                    <svg class="squiggle" viewBox="0 0 120 20">
+                        <path d="M0 10 Q 15 0, 30 10 T 60 10 T 90 10 T 120 10" fill="transparent" stroke="lime" stroke-width="6" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ✅ Listen for messages from chatbot-widget.html
+        window.addEventListener("message", function(event) {
+            if (event.data.type === "hover") {
+                if (event.data.state) {
+                    document.querySelector(".background-circle").classList.add("hovered");
+                } else {
+                    document.querySelector(".background-circle").classList.remove("hovered");
+                }
+            }
+
+            if (event.data.type === "clicked") {
+                document.querySelector(".background-circle").classList.add("clicked");
+
+                // Restore normal eyes after 0.8s
+                setTimeout(() => document.querySelector(".background-circle").classList.remove("clicked"), 800);
+            }
+        });
+    </script>
+
+</body>
+</html>
