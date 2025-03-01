@@ -141,6 +141,18 @@
         const chatbotContainer = document.getElementById("chatbot-container");
         const chatbotIframe = document.getElementById("chatbot-iframe");
 
+        function handleMessage(){
+            let userInput = document.getElementById("user-input").value;
+            let chatbox = document.getElementById("chatbox");
+
+            if (userInput.trim() === "") return;
+
+            chatbox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+            chatbox.innerHTML += `<p><strong>Bot:</strong> I'm not connected yet! 😢</p>`;
+
+            document.getElementById("user-input").value = "";
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
         // ✅ Ensure Click Works Along with Hover
         chatbotButton.addEventListener("mouseenter", function() {
             chatbotIframe.contentWindow.postMessage({ type: "hover", state: true }, "*");
@@ -159,16 +171,14 @@
 
         // ✅ Handle Sending Messages
         document.getElementById("send-button").addEventListener("click", function() {
-            let userInput = document.getElementById("user-input").value;
-            let chatbox = document.getElementById("chatbox");
-
-            if (userInput.trim() === "") return;
-
-            chatbox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
-            chatbox.innerHTML += `<p><strong>Bot:</strong> I'm not connected yet! 😢</p>`;
-
-            document.getElementById("user-input").value = "";
-            chatbox.scrollTop = chatbox.scrollHeight;
+            handleMessage()
+        });
+         // ✅ Handle Sending Messages
+         document.getElementById("user-input").addEventListener("keydown", function(event) {
+            if(event.key==="Enter"){
+                handleMessage()
+            }
+            
         });
 
         // ✅ Ensure Click Works Inside the Iframe
