@@ -14,6 +14,26 @@
             background-color: transparent;
         }
 
+        /* Chat Bubble Emoji */
+        .chat-bubble {
+            position: absolute;
+            top: -15px; /* Moves it slightly above Ava */
+            left: -5px; /* Adjust for better alignment */
+            font-size: 50px; /* Bigger emoji size */
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.5s ease-in-out;
+            z-index: 10; /* Ensures it's above Ava */
+        }
+
+        /* Hide Chat Bubble */
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
         /* Outer Circle Background */
         .background-circle {
             position: relative;
@@ -185,6 +205,9 @@
 
     <div class="container">
         <div class="background-circle" id="ava">
+            <!-- ✅ Chat Bubble Inside Ava -->
+            <div class="chat-bubble" id="chat-bubble">💬</div>
+            
             <div class="ava">
                 <div class="ear left"></div>
                 <div class="ear right"></div>
@@ -206,11 +229,22 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const ava = document.querySelector(".background-circle");
+            const ava = document.getElementById("ava");
+            const chatBubble = document.getElementById("chat-bubble");
             const eyes = document.querySelectorAll(".eye");
             const mouth = document.querySelector(".mouth");
             let typingTimeout;
-
+    
+            // ✅ Remove chat bubble when Ava is clicked
+            ava.addEventListener("click", () => {
+                chatBubble.classList.add("hidden");
+            });
+    
+            // ✅ Remove chat bubble after 5 seconds if not clicked
+            setTimeout(() => {
+                chatBubble.classList.add("hidden");
+            }, 5000);
+    
             // ✅ Hover & Click Effects
             ava.addEventListener("mouseenter", () => ava.classList.add("hovered"));
             ava.addEventListener("mouseleave", () => ava.classList.remove("hovered"));
@@ -218,7 +252,7 @@
                 ava.classList.add("clicked");
                 setTimeout(() => ava.classList.remove("clicked"), 800);
             });
-
+    
             // ✅ Listen for messages from chatbot-widget.html
             window.addEventListener("message", function(event) {
                 if (event.data.type === "hover") {
@@ -228,17 +262,17 @@
                     ava.classList.add("clicked");
                     setTimeout(() => ava.classList.remove("clicked"), 800);
                 }
-
+    
                 // ✅ Eyes & Mouth Change When Typing
                 if (event.data.type === "typing") {
                     clearTimeout(typingTimeout);
                     ava.classList.add("talking");
-
+    
                     typingTimeout = setTimeout(() => {
                         ava.classList.remove("talking");
                     }, 1000);
                 }
-
+    
                 // ✅ Reset Features When Chatbot Closes
                 if (event.data.type === "closeChatbot") {
                     clearTimeout(typingTimeout);
