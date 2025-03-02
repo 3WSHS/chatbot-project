@@ -11,7 +11,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: transparent; /* Matches iframe transparency */
+            background-color: transparent;
         }
 
         /* Outer Circle Background */
@@ -30,15 +30,9 @@
             cursor: pointer;
         }
 
-        /* 🔥 Hover Effect - Excited Expression */
-        .background-circle.hovered {
-            background-color: #ffcc00; /* Brighter Yellow */
-        }
-
-        /* 🔥 Click Effect - Darker Happy Expression */
-        .background-circle.clicked {
-            background-color: #ff8800;
-        }
+        /* Hover & Click Effects */
+        .background-circle.hovered { background-color: #ffcc00; }
+        .background-circle.clicked { background-color: #ff8800; }
 
         /* Floating Animation */
         @keyframes float {
@@ -68,15 +62,9 @@
             transition: background-color 0.3s ease-in-out;
         }
 
-        /* Hover Effect - Inner Head Color Changes */
-        .background-circle.hovered .ava {
-            background-color: #ffcc00; /* Brighter Yellow */
-        }
-
-        /* Click Effect - Inner Head Color Darkens */
-        .background-circle.clicked .ava {
-            background-color: #ff8800;
-        }
+        /* Hover & Click Effects */
+        .background-circle.hovered .ava { background-color: #ffcc00; }
+        .background-circle.clicked .ava { background-color: #ff8800; }
 
         /* Ears */
         .ear {
@@ -131,13 +119,11 @@
             border-radius: 12px;
             background-color: transparent;
             border-top: 7px solid white;
-            transition: opacity 0s ease-in-out;
+            transition: all 0.3s ease-in-out;
         }
 
-        /* 🔥 Click Effect - Right Eye Blinks (One Eye Disappears) */
-        .background-circle.clicked .eye:last-child {
-            opacity: 0;
-        }
+        /* Click Effect - Right Eye Blinks */
+        .background-circle.clicked .eye:last-child { opacity: 0; }
 
         /* Mouth */
         .mouth {
@@ -156,13 +142,21 @@
             transition: height 0.3s ease-in-out;
         }
 
+        /* ✅ Talking Mouth Animation */
+        .talking .mouth {
+            height: 50px;
+        }
+        .talking .squiggle path {
+            stroke-width: 8px;
+            animation: squiggle-move 0.8s infinite ease-in-out;
+        }
+
         /* Squiggly Talking Animation */
         .squiggle {
             width: 120%;
             height: 100%;
             position: absolute;
         }
-
         .squiggle path {
             stroke-dasharray: 150;
             stroke-dashoffset: 0;
@@ -170,44 +164,26 @@
             stroke-width: 6;
             stroke-linecap: round;
         }
-
-        /* Animation for Smooth Squiggly Movement */
         @keyframes squiggle-move {
             from { stroke-dashoffset: 150; }
             to { stroke-dashoffset: 0; }
         }
-
-        /* 🔥 Click Effect - Bigger Smile */
-        .background-circle.clicked .mouth {
-            height: 50px;
-        }
-
-        .background-circle.clicked .squiggle path {
-            stroke-width: 8px;
-        }
-
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Background Circle -->
         <div class="background-circle" id="ava">
             <div class="ava">
-                <!-- Ears -->
                 <div class="ear left"></div>
                 <div class="ear right"></div>
-
-                <!-- Antenna -->
                 <div class="antenna"></div>
 
-                <!-- Eyes -->
                 <div class="eyes">
                     <div class="eye"></div>
                     <div class="eye"></div>
                 </div>
 
-                <!-- Mouth -->
                 <div class="mouth">
                     <svg class="squiggle" viewBox="0 0 120 20">
                         <path d="M0 10 Q 15 0, 30 10 T 60 10 T 90 10 T 120 10" fill="transparent" stroke="lime" stroke-width="6" stroke-linecap="round"/>
@@ -218,38 +194,47 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {  // ✅ Ensures DOM is fully loaded before running
+        document.addEventListener("DOMContentLoaded", function() {
             const ava = document.querySelector(".background-circle");
-    
-            // ✅ Ensure Hover & Click Work Standalone (Not Just Via Widget)
-            ava.addEventListener("mouseenter", function() {
-                ava.classList.add("hovered");
-            });
-    
-            ava.addEventListener("mouseleave", function() {
-                ava.classList.remove("hovered");
-            });
-    
-            ava.addEventListener("click", function() {
+            const eyes = document.querySelectorAll(".eye");
+            const eyeContainer = document.querySelector(".eyes");
+            const mouth = document.querySelector(".mouth");
+            let typingTimeout; // Detects when typing stops
+
+            // ✅ Hover & Click Effects
+            ava.addEventListener("mouseenter", () => ava.classList.add("hovered"));
+            ava.addEventListener("mouseleave", () => ava.classList.remove("hovered"));
+            ava.addEventListener("click", () => {
                 ava.classList.add("clicked");
-    
-                // Restore normal state after 0.8s
                 setTimeout(() => ava.classList.remove("clicked"), 800);
             });
-    
+
             // ✅ Listen for messages from chatbot-widget.html
             window.addEventListener("message", function(event) {
                 if (event.data.type === "hover") {
                     ava.classList.toggle("hovered", event.data.state);
                 }
-    
                 if (event.data.type === "clicked") {
                     ava.classList.add("clicked");
-    
-                    // Restore normal state after 0.8s
                     setTimeout(() => ava.classList.remove("clicked"), 800);
                 }
-            });
+
+                // ✅ Mouth & Eyes Change When Typing
+                if (event.data.type === "typing") {
+                    clearTimeout(typingTimeout);
+                    ava.classList.add("talking");
+
+                    typingTimeout = setTimeout(() => {
+                        ava.classList.remove("talking");
+                    }, 1000);
+                }
+
+                // ✅ Reset Features When Chatbot Closes
+                if (event.data.type === "closeChatbot") {
+                    clearTimeout(typingTimeout);
+                    ava.classList.remove("talking");
+                }
+            }); 
         });
     </script>
 
