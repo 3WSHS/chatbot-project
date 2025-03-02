@@ -112,6 +112,7 @@
             display: flex;
             justify-content: space-between;
             transform: translateX(-50%);
+            transition: all 0.3s ease-in-out;
         }
         .eye {
             width: 34px;
@@ -120,6 +121,16 @@
             background-color: transparent;
             border-top: 7px solid white;
             transition: all 0.3s ease-in-out;
+        }
+
+        /* ✅ Eyes Change to ∩ (Happy Expression) When Typing */
+        .talking .eye {
+            width: 18px;
+            height: 12px;
+            border-radius: 90% 90% 0 0; /* High curve on top */
+            border-top: 4px solid white; /* Make it a smooth curve */
+            background-color: transparent;
+            transform: translateY(3px);
         }
 
         /* Click Effect - Right Eye Blinks */
@@ -197,9 +208,8 @@
         document.addEventListener("DOMContentLoaded", function() {
             const ava = document.querySelector(".background-circle");
             const eyes = document.querySelectorAll(".eye");
-            const eyeContainer = document.querySelector(".eyes");
             const mouth = document.querySelector(".mouth");
-            let typingTimeout; // Detects when typing stops
+            let typingTimeout;
 
             // ✅ Hover & Click Effects
             ava.addEventListener("mouseenter", () => ava.classList.add("hovered"));
@@ -219,7 +229,7 @@
                     setTimeout(() => ava.classList.remove("clicked"), 800);
                 }
 
-                // ✅ Mouth & Eyes Change When Typing
+                // ✅ Eyes & Mouth Change When Typing
                 if (event.data.type === "typing") {
                     clearTimeout(typingTimeout);
                     ava.classList.add("talking");

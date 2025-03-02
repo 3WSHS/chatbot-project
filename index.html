@@ -105,7 +105,7 @@
 
         #expand-button { right: 10px; }
         #dark-mode-toggle { right: 50px; }
-        #close-button { right: 90px; }
+        #close-button { left: 10px; } /* ⬅️ Move Close Button to the Left */
 
         /* Chat Messages */
         #chatbox {
@@ -165,10 +165,10 @@
     <!-- Chatbot Container -->
     <div id="chatbot-container">
         <div id="chatbot-header">
+            <button id="close-button">❌</button>
             Chat with Us
             <button id="expand-button">⛶</button>
             <button id="dark-mode-toggle">🌙</button>
-            <button id="close-button">❌</button>
         </div>
         <div id="chatbox"></div>
         <div id="chat-input">
