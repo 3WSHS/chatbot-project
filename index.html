@@ -27,6 +27,12 @@
             right: 400px;
         }
 
+        /* 🟢 Ava Moves Even More Left When Chatbox Expands */
+        .chatbox-open.expanded #chatbot-button {
+            right: 550px; /* Moves further left to stay visible */
+
+        }    
+
         /* Ava Talking Animation - Eyes Change to Upside-Down U's */
         .talking #chatbot-iframe {
             filter: brightness(1.1);
@@ -224,6 +230,10 @@
         // ✅ Expand/Minimize Chatbox
         expandButton.addEventListener("click", function() {
             chatbotContainer.classList.toggle("expanded");
+
+            // 🟢 Add/Remove expanded class from body so Ava moves left
+            document.body.classList.toggle("expanded", chatbotContainer.classList.contains("expanded"));
+            
             expandButton.textContent = chatbotContainer.classList.contains("expanded") ? "➖" : "⛶";
         });
 
